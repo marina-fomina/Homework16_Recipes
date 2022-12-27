@@ -5,29 +5,53 @@ import ru.fomina.recipes.model.ElementNotFoundException;
 import ru.fomina.recipes.model.Ingredient;
 import ru.fomina.recipes.service.IngredientService;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class IngredientServiceImpl implements IngredientService {
 
-    private static Integer ingredientId = 0;
-    private static Map<Integer, Ingredient> ingredientMap = new HashMap<>();
+    private Integer ingredientId = 0;
+    private final Map<Integer, Ingredient> ingredientMap = new HashMap<>();
 
 
     @Override
-    public void addIngredient(Ingredient ingredient) {
+    public Ingredient addIngredient(Ingredient ingredient) {
         Ingredient ingredientMapOrDefault = ingredientMap.getOrDefault(ingredientId, ingredient);
         ingredientMap.put(ingredientId++, ingredient);
+        return ingredient;
     }
 
     @Override
-    public void getIngredient(Integer ingredientId) {
+    public Ingredient getIngredient(Integer ingredientId) {
         if (ingredientMap.containsKey(ingredientId)) {
-            getIngredient(ingredientId);
+            return ingredientMap.get(ingredientId);
         } else {
             throw new ElementNotFoundException("Нет ингредиента с таким номером!");
+        }
+    }
+
+    @Override
+    public List<Ingredient> getAllIngredients() {
+        return new ArrayList<>(ingredientMap.values());
+    }
+
+    @Override
+    public Ingredient editIngredient(Integer ingredientId, Ingredient ingredient) {
+        if (ingredientMap.containsKey(ingredientId)) {
+            ingredientMap.put(ingredientId, ingredient);
+            return ingredient;
+        } else {
+            throw new ElementNotFoundException("Нет ингредиента с таким номером!");
+        }
+    }
+
+    @Override
+    public boolean deleteIngredient(Integer ingredientId) {
+        if (ingredientMap.containsKey(ingredientId)) {
+            ingredientMap.remove(ingredientId);
+            return true;
+        } else {
+            return false;
         }
     }
 }

@@ -31,7 +31,7 @@ public class Ingredient {
     }
 
     public void setQuantity(int quantity) {
-        if (quantity > 0) {
+        if (quantity >= 0) {
             this.quantity = quantity;
         } else {
             throw new NotEnoughData("Неверно указано количество ингредиента!");
