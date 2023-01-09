@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.fomina.recipes.service.FilesService;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -43,7 +44,13 @@ public class FilesServiceImpl implements FilesService {
         }
     }
 
-    private boolean cleanIngredientFile() {
+    @Override
+    public File getIngredientFile() {
+        return new File(ingredientFilePath + "/" + ingredientFileName);
+    }
+
+    @Override
+    public boolean cleanIngredientFile() {
         Path path = Path.of(ingredientFilePath, ingredientFileName);
         try {
             Files.deleteIfExists(path);
@@ -76,7 +83,13 @@ public class FilesServiceImpl implements FilesService {
         }
     }
 
-    private boolean cleanRecipeFile() {
+    @Override
+    public File getRecipeFile() {
+        return new File(recipeFilePath + "/" + recipeFileName);
+    }
+
+    @Override
+    public boolean cleanRecipeFile() {
         Path path = Path.of(recipeFilePath, recipeFileName);
         try {
             Files.deleteIfExists(path);
