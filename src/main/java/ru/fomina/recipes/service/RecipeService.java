@@ -1,6 +1,9 @@
 package ru.fomina.recipes.service;
 
 import ru.fomina.recipes.model.Recipe;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 public interface RecipeService {

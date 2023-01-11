@@ -3,6 +3,8 @@ package ru.fomina.recipes.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.models.security.SecurityScheme;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import ru.fomina.recipes.model.ElementNotFoundException;
 import ru.fomina.recipes.model.Ingredient;
@@ -11,6 +13,10 @@ import ru.fomina.recipes.service.FilesService;
 import ru.fomina.recipes.service.RecipeService;
 
 import javax.annotation.PostConstruct;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.*;
 
 @Service
@@ -19,7 +25,7 @@ public class RecipeServiceImpl implements RecipeService {
     private final FilesService filesService;
 
     private Integer recipeId = 0;
-    private Map<Integer, Recipe> recipeMap = new LinkedHashMap<>();
+    private LinkedHashMap<Integer, Recipe> recipeMap = new LinkedHashMap<>();
 
     public RecipeServiceImpl(FilesService filesService) {
         this.filesService = filesService;
@@ -27,7 +33,11 @@ public class RecipeServiceImpl implements RecipeService {
 
     @PostConstruct
     private void init() {
-        readRecipeFromFile();
+        try {
+            readRecipeFromFile();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -78,17 +88,17 @@ public class RecipeServiceImpl implements RecipeService {
             String json = new ObjectMapper().writeValueAsString(recipeMap);
             filesService.saveRecipeToFile(json);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
     private void readRecipeFromFile() {
         try {
             String json = filesService.readRecipeFromFile();
-            recipeMap = new ObjectMapper().readValue(json, new TypeReference<Map<Integer, Recipe>>() {
+            recipeMap = new ObjectMapper().readValue(json, new TypeReference<LinkedHashMap<Integer, Recipe>>() {
             });
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 }

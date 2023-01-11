@@ -26,7 +26,11 @@ public class IngredientServiceImpl implements IngredientService {
 
     @PostConstruct
     private void init() {
-        readIngredientFromFile();
+        try {
+            readIngredientFromFile();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -78,7 +82,7 @@ public class IngredientServiceImpl implements IngredientService {
             String json = new ObjectMapper().writeValueAsString(ingredientMap);
             filesService.saveIngredientToFile(json);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
@@ -88,7 +92,7 @@ public class IngredientServiceImpl implements IngredientService {
             ingredientMap = new ObjectMapper().readValue(json, new TypeReference<Map<Integer, Ingredient>>() {
             });
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 }
